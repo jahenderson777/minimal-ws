@@ -120,8 +120,7 @@
   (let [s (slurp filename)
         short-hands (take-nth 2 mapping)
         pat (re-pattern (str "\\.(" (apply str (interpose "|" short-hands)) ")(-?[\\d]+)"))]
-    (doto (re-seq pat s)
-      println)))
+    (re-seq pat s)))
 
 (defn extract-classes
   {:shadow.build/stage :flush}

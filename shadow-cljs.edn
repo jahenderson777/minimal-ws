@@ -8,5 +8,4 @@
                 :modules {:main {:init-fn client.core/init}}
                 :devtools {:http-root "resources/public"
                            :http-port 8020}
-                :build-hooks [(dev/extract-classes)]
-                :watch-dirs ["src" "resources/public"]}}}
+                :build-hooks [(dev/extract-classes)]}}}
