@@ -56,3 +56,4 @@ package-lock.json
 .portals
 .clj-kondo
 .env
+/.portal/
