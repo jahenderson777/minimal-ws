@@ -1,4 +1,5 @@
-(ns user
-  )
+(ns user 
+  (:require
+   [server.core :as core]))
 
-;(core/-main)
+(core/-main)
