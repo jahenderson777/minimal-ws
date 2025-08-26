@@ -1,0 +1,4 @@
+(ns user
+  )
+
+;(core/-main)
