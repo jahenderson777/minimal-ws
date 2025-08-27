@@ -31,7 +31,8 @@
 (def app (-> #(case (:uri %)
                 "/ws" (ws-handler %)
                 "/" {:status 200 :headers {"Content-Type" "text/html"}
-                     :body (slurp "resources/public/index.html")})
+                     :body (slurp "resources/public/index.html")}
+                {:status 404})
              (wrap-resource "public")
              (wrap-content-type)))
 
