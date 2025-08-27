@@ -1,7 +1,7 @@
 (ns client.ui)
 
 (defn ui [state]
-  [:div.p10
+  [:div.p114
    [:h1 "this is an H1"]
    [:h2 "this is an H2"]
    [:h3 "this is an H3"]

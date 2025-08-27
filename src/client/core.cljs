@@ -1,8 +1,10 @@
 (ns client.core
-  (:require [client.ui :as ui]
-            [cognitect.transit :as transit]
-            [replicant.dom :as r]
-            [nexus.registry :as nxr]))
+  (:require
+   [client.ui :as ui]
+   [clojure.string :as str]
+   [cognitect.transit :as transit]
+   [nexus.registry :as nxr]
+   [replicant.dom :as r]))
 
 (defonce ws (atom nil))
 (defonce store (atom nil))
@@ -40,10 +42,12 @@
                         (send-msg server-evt)))
 
 (defn reload-css! []
-  (println "reload css")
-   (doseq [link (array-seq (.getElementsByTagName js/document "link"))]
-     (when (.includes (.-href link) ".css")
-       (set! (.-href link) (str (.-href link) "?v=" (js/Date.now))))))
+  (doseq [link (array-seq (.getElementsByTagName js/document "link"))]
+    (when (str/includes? (.-href link) ".css")
+      (let [href (.-href link)
+            clean-href (str/replace href #"\?v=\d+" "")]
+        (set! (.-href link)
+              (str clean-href "?v=" (js/Date.now)))))))
 
 (defn init [] 
   (connect!)
