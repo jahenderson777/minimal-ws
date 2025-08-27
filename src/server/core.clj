@@ -8,6 +8,8 @@
             [server.events :refer [handle-event]])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
 
+(defonce ws-clients (atom #{}))
+
 (defn encode-transit [data]
   (let [out (ByteArrayOutputStream.)
         writer (transit/writer out :json)]
@@ -21,12 +23,18 @@
 
 (defn ws-handler [req]
   (d/let-flow [conn (d/catch (http/websocket-connection req) (fn [_] nil))]
-              (when conn (s/consume #(->> % decode-transit
-                                          handle-event
-                                          encode-transit
-                                          (s/put! conn))
-                                    conn)
-                    nil)))
+              (when conn
+                (swap! ws-clients conj conn)
+                (s/consume #(->> % decode-transit
+                                 handle-event
+                                 encode-transit
+                                 (s/put! conn)) conn)
+                (s/on-closed conn #(swap! ws-clients disj conn)))))
+
+(defn broadcast [data]
+  (let [msg (encode-transit data)]
+    (doseq [client @ws-clients]
+      (s/put! client msg))))
 
 (def app (-> #(case (:uri %)
                 "/ws" (ws-handler %)
