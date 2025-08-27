@@ -8,6 +8,7 @@
 
 (defonce ws (atom nil))
 (defonce store (atom nil))
+(defonce root-el (js/document.getElementById "app"))
 (nxr/register-system->state! deref)
 
 (defn encode [data]
@@ -18,7 +19,7 @@
   (let [r (transit/reader :json)]
     (transit/read r s)))
 
-(defn connect! []
+(defn connect-ws! []
   (let [socket (js/WebSocket. "/ws")]
     (set! (.-onmessage socket)
           (fn [e] (swap! store merge (decode (.-data e)))))
@@ -44,22 +45,19 @@
 (defn reload-css! []
   (doseq [link (array-seq (.getElementsByTagName js/document "link"))]
     (when (str/includes? (.-href link) ".css")
-      (let [href (.-href link)
-            clean-href (str/replace href #"\?v=\d+" "")]
+      (let [clean-href (str/replace (.-href link) #"\?v=\d+" "")]
         (set! (.-href link)
               (str clean-href "?v=" (js/Date.now)))))))
 
 (defn init [] 
-  (connect!)
+  (connect-ws!)
   (js/setTimeout #(send-msg [:ping {:msg "Hello from client"
                                     :at (.toISOString (js/Date.))}])
                  1000)
-
-  (let [el (js/document.getElementById "app")]
-    (add-watch store ::render
-               (fn [_ _ _ state]
-                 (->> (ui/ui state)
-                      (r/render el)))))
+  
+  (add-watch store ::render
+             (fn [_ _ _ state] 
+               (r/render root-el (ui/ui state))))
   
   (r/set-dispatch!
    (fn [dispatch-data actions]
@@ -68,7 +66,6 @@
   (reset! store {:foo "bar"}))
 
 
-(defn ^:dev/after-load re-render []
-  (->> (ui/ui @store)
-       (r/render (js/document.getElementById "app")))
+(defn ^:dev/after-load re-render [] 
+  (r/render root-el (ui/ui @store))
   (reload-css!))

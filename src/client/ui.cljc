@@ -1,13 +1,13 @@
 (ns client.ui)
 
 (defn ui [state]
-  [:div.p114
+  [:div.p14
    [:h1 "this is an H1"]
    [:h2 "this is an H2"]
    [:h3 "this is an H3"]
    [:h4 "this is an H4"]
    [:p "body text"]
-   [:p "another para text"]
+   [:p "another para text."]
 
 
    [:button
