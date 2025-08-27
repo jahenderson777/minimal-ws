@@ -8,6 +8,7 @@
             [server.events :refer [handle-event]])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
 
+(defonce server (atom nil))
 (defonce ws-clients (atom #{}))
 
 (defn encode-transit [data]
@@ -43,8 +44,6 @@
                 {:status 404})
              (wrap-resource "public")
              (wrap-content-type)))
-
-(defonce server (atom nil))
 
 (defn -main [& _]
   (reset! server (http/start-server #'app {:port 8087}))
