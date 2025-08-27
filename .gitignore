@@ -57,3 +57,4 @@ package-lock.json
 .clj-kondo
 .env
 /.portal/
+/resources/public/js/manifest.edn

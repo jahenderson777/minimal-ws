@@ -21,13 +21,12 @@
 
 (defn ws-handler [req]
   (d/let-flow [conn (d/catch (http/websocket-connection req) (fn [_] nil))]
-              (when conn
-                (s/consume #(->> % decode-transit
-                                 handle-event
-                                 encode-transit
-                                 (s/put! conn))
-                           conn)
-                nil)))
+              (when conn (s/consume #(->> % decode-transit
+                                          handle-event
+                                          encode-transit
+                                          (s/put! conn))
+                                    conn)
+                    nil)))
 
 (def app (-> #(case (:uri %)
                 "/ws" (ws-handler %)
