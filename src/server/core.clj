@@ -21,33 +21,28 @@
 
 (defn ws-handler [req]
   (d/let-flow [conn (d/catch (http/websocket-connection req) (fn [_] nil))]
-              (if-not conn
-                {:status 400 :body "Expected WebSocket"}
-                (do (s/consume
-                     (fn [msg]
-                       (let [event (decode-transit msg)
-                             response (handle-event event)]
-                         (s/put! conn (encode-transit response))))
-                     conn)
-                    ;; return nil because Ring expects a response
-                    nil))))
+              (when conn
+                (s/consume #(->> % decode-transit
+                                 handle-event
+                                 encode-transit
+                                 (s/put! conn))
+                           conn)
+                nil)))
 
-(def app
-  (-> #(case (:uri %)
-         "/ws" (ws-handler %)
-         "/" {:status 200 :headers {"Content-Type" "text/html"}
-              :body (slurp "resources/public/index.html")})
-      (wrap-resource "public")
-      (wrap-content-type)))
+(def app (-> #(case (:uri %)
+                "/ws" (ws-handler %)
+                "/" {:status 200 :headers {"Content-Type" "text/html"}
+                     :body (slurp "resources/public/index.html")})
+             (wrap-resource "public")
+             (wrap-content-type)))
 
 (defonce server (atom nil))
 
-(defn start! []
-  (reset! server (http/start-server #'app {:port 8087}))
-  (println "Server running at http://localhost:8087"))
-
 (defn -main [& _]
-  (start!))
+  (reset! server (http/start-server #'app {:port 8087}))
+  (println "Server running"))
 
 (comment
-  (.close @server))
+  (.close @server)
+  (-main)
+  )
