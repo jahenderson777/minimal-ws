@@ -6,7 +6,8 @@
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.resource :refer [wrap-resource]]
             [server.events :refer [handle-event]])
-  (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream])
+  (:gen-class))
 
 (defonce server (atom nil))
 (defonce ws-clients (atom #{}))
@@ -30,7 +31,8 @@
                                  handle-event
                                  encode-transit
                                  (s/put! conn)) conn)
-                (s/on-closed conn #(swap! ws-clients disj conn)))))
+                (s/on-closed conn #(swap! ws-clients disj conn))
+                nil)))
 
 (defn broadcast [data]
   (let [msg (encode-transit data)]

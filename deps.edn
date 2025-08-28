@@ -9,6 +9,9 @@
 
         no.cjohansen/replicant {:mvn/version "2025.02.02"}
         no.cjohansen/nexus {:mvn/version "2025.07.1"}}
- :aliases {:dev {:extra-paths ["dev"]
+ :aliases {:build {:extra-deps {org.clojure/clojure {:mvn/version "1.12.2"}
+                                io.github.clojure/tools.build {:mvn/version "0.10.10"}}
+                   :ns-default build}
+           :dev {:extra-paths ["dev"]
                  :extra-deps {thheller/shadow-cljs {:mvn/version "3.2.0"}
                               binaryage/devtools {:mvn/version "1.0.7"}}}}}

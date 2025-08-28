@@ -1,5 +1,4 @@
-{:source-paths ["src"] 
- :deps {:aliases [:dev]}
+{:deps {:aliases [:dev]}
  :builds {:app {:target :browser
                 :output-dir "resources/public/js"
                 :asset-path "/js"
