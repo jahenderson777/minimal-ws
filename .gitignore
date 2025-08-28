@@ -58,3 +58,4 @@ package-lock.json
 .env
 /.portal/
 /resources/public/js/manifest.edn
+/resources/public/js/main.js

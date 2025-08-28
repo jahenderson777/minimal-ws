@@ -5,7 +5,8 @@
         ring/ring-devel           {:mvn/version "1.12.1"}
         ring/ring-defaults        {:mvn/version "0.4.0"}
         com.cognitect/transit-clj {:mvn/version "1.0.333"}
-        com.cognitect/transit-cljs {:mvn/version "0.8.280"} 
+        com.cognitect/transit-cljs {:mvn/version "0.8.280"}
+        metosin/jsonista {:mvn/version "0.3.13"}
 
         no.cjohansen/replicant {:mvn/version "2025.02.02"}
         no.cjohansen/nexus {:mvn/version "2025.07.1"}}
