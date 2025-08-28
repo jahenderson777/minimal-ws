@@ -31,8 +31,8 @@
                                  handle-event
                                  encode-transit
                                  (s/put! conn)) conn)
-                (s/on-closed conn #(swap! ws-clients disj conn))
-                nil)))
+                (s/on-closed conn #(swap! ws-clients disj conn))))
+  {:status 200})
 
 (defn broadcast [data]
   (let [msg (encode-transit data)]
@@ -49,7 +49,7 @@
 
 (defn -main [& _]
   (reset! server (http/start-server #'app {:port 8087}))
-  (println "Server running"))
+  (println "Server running on 8087"))
 
 (comment
   (.close @server)
